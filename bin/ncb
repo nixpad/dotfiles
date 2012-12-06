@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+directories = %w[ account_home acquisition identity jenkins_git_proxy mef moriarty pgs portal portfolio postal_service]
+directories = %w[ acquisition ]
+home = "/Users/npadilla/enova/netcredit/apps/"
+
+puts "CURRENT DIR: #{Dir.pwd}"
+puts "HOME: #{home.inspect}"
+
+directories.each do |dir|
+  level = home + dir
+  Dir.chdir level
+  `git rev-parse --abbrev-ref HEAD`
+  puts "#{level}"
+  result = `git checkout master`
+  if result.include?('error')
+    puts "#{`git branch`}"
+  end
+end
+__END__
+cd ~/enova/netcredit/apps/acquisition/ #go to this APP
+git rev-parse --abbrev-ref HEAD #check current branch
+git checkout master #switch to master
+cd ~/enova/netcredit/apps/identity/ #go to next APP
