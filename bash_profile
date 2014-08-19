@@ -1,18 +1,38 @@
-# == Database Aliases
+# == RBENV
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+eval "$(rbenv init -)"
+
+# == Pow
 alias pgstart="pg_ctl -D /usr/local/var/postgres -l logfile start"
 alias pgstop="pg_ctl -D /usr/local/var/postgres -l logfile stop"
+
+# == Database Aliases
+# ==== NetCredit
 alias dbacq="psql -U netcredit netcredit_acquisition_development"
 alias dbid="psql -U netcredit netcredit_identity_development"
 alias dbpf="psql -U netcredit netcredit_portfolio_development"
 
+alias ncacq="psql -h proddb-acquisition.netcredit.com -U netcredit__read_only -d acquisition_prod_nc"
+alias ncid="psql -h proddb-identity.netcredit.com -U npadilla -d identity_prod_nc"
+alias ncpf="psql -h proddb-portfolio.netcredit.com -U netcredit__read_only -d portfolio_prod_nc"
+alias ncpt="psql -h proddb-portal.netcredit.com -U netcredit__read_only -d portal_prod_nc"
+alias ncps="psql -h proddb-postal.enova.com -U netcredit__read_only -d postal_prod_eno"
+alias ncpgs="psql -h proddb-payments.netcredit.com -U netcredit__read_only -d payments_prod_nc"
+alias ncah="psql -h proddb-my.netcredit.com -U netcredit__read_only -d accounthome_prod_nc"
+
+alias cnz="psql -h china-zhongwen-production.cko69p5mrvej.ap-southeast-1.rds.amazonaws.com -d zhongwen_prod_cn -U npadilla"
+
+# ==== UK
+alias ukprod="psql -h proddb.quickquid.co.uk -U npadilla -d cnuapp_prod_uk"
+alias ukslave="psql -h slavedb.quickquid.co.uk -U npadilla -d cnuapp_prod_uk"
+# ==== Zhongwen
+alias zacq="psql -U china zhongwen_development"
+
+
 # == Logs
 alias nclogs="tail -f /Users/npadilla/enova/netcredit/apps/*/log/*.log"
-
-# == load RVM
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-# Because rvm's --defalut does not seem to be working
-rvm use ruby-1.9.3-p194
+alias pblogs="tail -f ~/enova/trogdor/*/log/*.log"
+alias cnlogs="tail -f ~/enova/china/*/log/*.log"
 
 # == Git
 source ~/.git_completion.sh
@@ -24,19 +44,19 @@ alias ga="git add"
 alias gs="git status"
 alias gd="git diff"
 alias go="git checkout"
+alias gl="git pull"
+alias gc="git commit -m"
+alias gb="git branch"
+alias gf="git fetch"
+
+# == VCR
+alias vcrl="LIVE_TESTS=1 bundle exec cucumber"
+alias vcrr="LIVE_TESTS=1 RECORD=1 bundle exec cucumber"
 
 # == Pow
-alias kill_pow="ps x | grep "Pow" | grep -v grep | cut -d' ' -f 1 | kill -9"
 alias repow="powify server restart"
-alias powid="powify restart identity.netcredit"
-alias powac="powify restart acquisition.netcredit"
-alias powpf="powify restart portfolio.netcredit"
-alias powpt="powify restart portal.netcredit"
-alias powah="powify restart account-home.netcredit"
-alias powmf="powify restart mef.netcredit"
-alias powmr="powify restart moriarty.netcredit"
-alias powps="powify restart postal-service.netcredit"
-alias powpg="powify restart payments.netcredit"
+alias xpow="powify server stop"
+alias gpow="powify server start"
 
 # == Bundle
 alias be="bundle exec"
@@ -45,9 +65,16 @@ alias bi="bundle install"
 # == NConjure
 ncj () {
   pushd ~/enova/netcredit/gems/nconjure >/dev/null
-  bin/ncj $@
+  bin/nconjure $@
   popd >/dev/null
 }
+
+# == GeekNote
+alias gn="python ~/geeknote/geeknote.py"
+
+# VPN
+export FIX_VPN_POW=yes
+export FIX_VPN_MINIRAISER=yes
 
 # ===== from Josh =====
 function josh_is_my_friend {
@@ -67,13 +94,6 @@ function josh_is_my_friend {
   }
 }
 
-# == ALIASES
-  # path
-    alias     ..="cd .."
-    alias    ...="cd ../.."
-    alias   ....="cd ../../.."
-    alias  .....="cd ../../../.."
-    alias ......="cd ../../../../.."
       # -l  long format
       # -F  / after dirs, * after exe, @ after symlink
       # -G  colorize
@@ -115,6 +135,14 @@ function josh_is_my_friend {
       cd "$(dirname $(gem which $1))"
     }
 
+  # give the fullpaths of files
+    function fullpath {
+      ruby -e '
+        $stdin.each_line { |path| puts File.expand_path path }  if ARGV.empty?
+        ARGV.each { |path| puts File.expand_path path }         unless ARGV.empty?
+      ' "$@"
+    }
+
 
 # == PROMPT
   function parse_git_branch {
@@ -123,3 +151,5 @@ function josh_is_my_friend {
 
   PS1="\[\033[37;45m\] \@ \[\033[0m\] \[\033[37;45m\] \w \[\033[0m\] \[\033[32;45m\]\$(parse_git_branch)\[\033[0m\]\n\$ \[\033[0m\]"
 
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
