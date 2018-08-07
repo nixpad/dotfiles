@@ -1,6 +1,7 @@
 # ALIASES
 alias l="ls -lFGgohq"
 
+alias gh="cd ~/github"
 alias gl="git pull"
 alias ga="git add"
 alias gs="git status"
@@ -8,29 +9,19 @@ alias gd="git diff"
 alias gu="git checkout"
 alias gb="git branch"
 alias gr="git remote"
+alias lint='git status -s | cut -d" " -f3 | xargs rubocop -a'
 
 alias be="bundle exec"
 alias bi="bundle install"
 
-alias bw="cd ~/bigcommerce/devbox"
-alias appvm="cd ~/bigcommerce/bigcommerce-app-vm"
-alias beec="cd ~/bigcommerce/bigcommerce-app-vm/codebases/bigcommerce"
-alias auth="cd ~/bigcommerce/devbox/codebases/A-A"
-alias apps="cd ~/bigcommerce/devbox/codebases/app-registry"
-alias dp="cd ~/bigcommerce/devbox/codebases/developer-portal"
-alias api="cd ~/bigcommerce/devbox/codebases/api-proxy-java"
-alias hm="cd ~/bigcommerce/devbox/codebases/hooks-manager"
-alias disp="cd ~/bigcommerce/devbox/codebases/webhooks-java"
-alias theme="cd ~/bigcommerce/devbox/codebases/theme-registry"
-
-alias dc="docker-compose"
-alias usedport="lsof -i tcp:1234"
-
 # git autocomplete
-source ~/Documents/git_completion.sh
+# source ~/Documents/git_completion.sh
+
+# Clear and precompile assets
+alias assets="RAILS_ENV=test bin/rake assets:clobber assets:precompile"
 
 # homebrew
-alias brew-formulas="open 'https://github.com/mxcl/homebrew/tree/master/Library/Formula'"
+# alias brew-formulas="open 'https://github.com/mxcl/homebrew/tree/master/Library/Formula'"
 
 # give the fullpaths of files
   function fullpath {
@@ -68,27 +59,23 @@ function parse_git_branch {
 
 PS1="\[\033[37;45m\] \@ \[\033[0m\] \[\033[37;45m\] \w \[\033[0m\] \[\033[32;45m\]\$(parse_git_branch)\[\033[0m\]\n\$ \[\033[0m\]"
 
-#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
 # open ports
 alias openports="netstat -a | egrep 'Proto|LISTEN'"
 
-# Set Java version
-export JAVA_HOME="$(/usr/libexec/java_home)"
+# see used ports `sudo lsof -i tcp:$PORT`
 
-# Explicitly tell api-proxy-java to use this environment variable to find my certificate. Dunno why it's not looking here
-export JAVA_TRUST_STORE="-Djavax.net.ssl.trustStore=/Users/nikka.padilla/bigcommerce/api-proxy-java/conf/cacerts.jks -Djavax.net.ssl.trustStorePassword=changeit"
+# node
+eval "$(nodenv init -)"
 
-# Instantiate rbenv
-eval "$(rbenv init -)"
-
-export ACKRC="~/.ackrc"
-
-alias ctags="`brew --prefix`/bin/ctags"
-
-export GOPATH="$HOME/coding/go-projects"
-export PATH="$PATH:$GOPATH/bin"
+# brew
 export PATH="/usr/local/sbin:$PATH"
-export BOX_PATH=/Users/nikka.padilla/bigcommerce/devbox
-source ~/.dev_profile
-source ~/.nvm/nvm.sh
+export PATH="/Users/nixpad/bin:$PATH"
+export PATH="bin:$PATH"
+
+# export PATH="/usr/local/opt/mysql@5.6/bin:$PATH"
+
+# export PATH="/Users/nixpad/.gem/ruby/2.0.0/bin:$PATH"
+
+# rbenv
+export PATH="$HOME/.rbenv/shims:$PATH"
+eval "$(rbenv init -)"
